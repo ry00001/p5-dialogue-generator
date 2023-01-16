@@ -23,7 +23,8 @@ const TextAndTools = ({ char, setChar, emote, setEmote, costume, setCostume, set
     setName,
   }
 
-  const downloadImage = (): void => {
+  // Modified by Rika. 4 spaces should be the default, fight me.
+  const renderImage = (): HTMLCanvasElement => {
     const downloadCanvas: HTMLCanvasElement = document.createElement('canvas');
     downloadCanvas.width = 1275;
     downloadCanvas.height = 500;
@@ -38,9 +39,6 @@ const TextAndTools = ({ char, setChar, emote, setEmote, costume, setCostume, set
       document.getElementById('nameCanvas') as HTMLCanvasElement;
     const textCanvas: HTMLCanvasElement = 
       document.getElementById('textCanvas') as HTMLCanvasElement;
-
-    const nameField: HTMLTextAreaElement =
-      document.getElementById('nameField') as HTMLTextAreaElement;
     
     const dCtx: CanvasRenderingContext2D = downloadCanvas.getContext('2d') as CanvasRenderingContext2D;
     dCtx.drawImage(portraitCanvas, 0, 0, 1275, 500);
@@ -48,11 +46,35 @@ const TextAndTools = ({ char, setChar, emote, setEmote, costume, setCostume, set
     dCtx.drawImage(tileCanvas, 0, 0, 1275, 500);
     dCtx.drawImage(nameCanvas, 0, 0, 1275, 500);
     dCtx.drawImage(textCanvas, 0, 0, 1275, 500);
+    return downloadCanvas;
+  }
+
+  // Modified by Rika
+  const downloadImage = (): void => {
+    const nameField: HTMLTextAreaElement =
+        document.getElementById('nameField') as HTMLTextAreaElement;
+    const downloadCanvas = renderImage();
     const link: HTMLAnchorElement = document.createElement('a');
-    link.download = `${nameField.value}-${text}.png`;
+    // is this correct? i don't know and i don't care
+    link.download = `${nameField}-${text}.png`;
     link.href = downloadCanvas.toDataURL('image/png');
     link.click();
     return;
+  };
+
+  // Modified by Rika
+  const copyImageToClipboard = (): void => {
+    const img = renderImage();
+    img.toBlob(b => {
+        if (b === null)
+        {
+            throw new Error('what');
+        }
+        navigator.clipboard.write([new ClipboardItem({
+            ['image/png']: b,
+        })]);
+        console.log('ok');
+    }, 'image/png', 1);
   };
 
   const customPortrait = (e: SyntheticEvent<HTMLInputElement>): void => {
@@ -109,6 +131,11 @@ const TextAndTools = ({ char, setChar, emote, setEmote, costume, setCostume, set
               onClick={downloadImage}
             >
               <div>Download</div>    
+            </div>
+            {/* rika's code starts and ends here */}
+            <div id='copyToClipboard' className='knife'
+                onClick={copyImageToClipboard}>
+                <div>Copy to clipboard</div>
             </div>
             <label id='upload' className='knife'>Upload Portrait
               {/* Every time user clicks on the button, the old picture's URL is cleared, 
