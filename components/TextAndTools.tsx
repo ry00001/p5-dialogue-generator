@@ -70,7 +70,7 @@ const TextAndTools = ({ char, setChar, emote, setEmote, costume, setCostume, set
         {
             throw new Error('what');
         }
-        navigator.clipboard.write([new ClipboardItem({
+        (navigator.clipboard as any).write([new (window as any).ClipboardItem({
             ['image/png']: b,
         })]);
         console.log('ok');
