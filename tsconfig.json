@@ -1,15 +1,5 @@
 {
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "module": "commonjs",
-    "outDir": "./build/",
-    "esModuleInterop": true,
-    "preserveConstEnums": true,
-    "removeComments": true,
-    "sourceMap": true,
-    "target": "es5"
-  },
-  "include": [
-    "assets/index.tsx"
-  ]
+    "jsx": "react-jsx"
+  }
 }
